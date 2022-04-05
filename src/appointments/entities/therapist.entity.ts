@@ -1,7 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { Appointment } from './appointment.entity';
 
-export enum Speciality {
+export enum Specialism {
     ADDICTION = "addiction",
     ADHD = "adhd",
     CBT = "cbt",
@@ -19,12 +19,12 @@ export class Therapist{
 
     @Column({
         type:"enum",
-        enum: Speciality,
+        enum: Specialism,
         array: true,
         default: []
     })
-    specialities: Speciality[]
+    specialisms: Specialism[]
 
-    @OneToMany(type => Appointment, appointment => appointment.therapist)
+    @OneToMany(type => Appointment, appointment => appointment.therapist, {cascade: true})
     appointments: Appointment[];
 }

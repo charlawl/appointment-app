@@ -1,8 +1,17 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UsePipes, ValidationPipe, DefaultValuePipe, PipeTransform, ArgumentMetadata } from '@nestjs/common';
 import { AppointmentsService } from './appointments.service';
 import { CreateAppointmentDto } from './dto/create-appointment.dto';
+import { RequestAppointmentsDto } from './dto/request-appointments.dto';
+import { AppointmentResponseDto, ResponseAppointmentDto } from './dto/response-appointment.dto';
 import { UpdateAppointmentDto } from './dto/update-appointment.dto';
 
+
+export class ParseDatePipe implements PipeTransform{
+  
+  transform(value: string, metadata: ArgumentMetadata) {
+    
+  }
+}
 @Controller('appointments')
 export class AppointmentsController {
   constructor(private readonly appointmentsService: AppointmentsService) {}
@@ -13,8 +22,9 @@ export class AppointmentsController {
   }
 
   @Get()
-  findAll() {
-    return this.appointmentsService.findAll();
+  @UsePipes(new ValidationPipe({transform:true}))
+  findAll(@Query() dto:RequestAppointmentsDto)  {
+    return this.appointmentsService.findBy(dto);
   }
 
   @Get(':id')
@@ -32,3 +42,4 @@ export class AppointmentsController {
     return this.appointmentsService.remove(+id);
   }
 }
+

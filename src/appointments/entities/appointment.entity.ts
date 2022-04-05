@@ -15,10 +15,10 @@ export class Appointment {
     clientId: string;
 
     @Column()
-    duration: number;
+    startTime: Date
 
     @Column()
-    startDate: Date
+    endTime: Date
 
     @Column({
         type:"enum",
@@ -26,6 +26,6 @@ export class Appointment {
     })
     appointmentType: AppointmentType
 
-    @ManyToOne(type => Therapist, therapist => therapist.appointments, {cascade: true})
+    @ManyToOne(type => Therapist, therapist => therapist.appointments, {eager: true})
     therapist: Therapist 
 }
