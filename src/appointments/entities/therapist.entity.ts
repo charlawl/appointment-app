@@ -1,3 +1,4 @@
+import { Expose } from 'class-transformer';
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { Appointment } from './appointment.entity';
 
@@ -14,6 +15,7 @@ export class Therapist{
     @PrimaryGeneratedColumn()
     id: number;
 
+    @Expose()
     @Column()
     name: string;
 

@@ -1,7 +1,7 @@
 import {
   IsArray,
     IsDate,
-    IsDateString,
+    IsEnum,
     IsOptional
   } from 'class-validator';
 import { Type, Transform } from 'class-transformer'
@@ -20,11 +20,13 @@ export class RequestAppointmentsDto{
     endDate: Date;
 
     @IsOptional()
+    @IsEnum(AppointmentType)
     appointmentType: AppointmentType
 
     @IsArray()
     @IsOptional()
     @Transform(({ value }) => value.split(','))
     @Type(() => Array)
+    @IsEnum(Specialism, { each: true })
     specialisms: Specialism[]
 }
