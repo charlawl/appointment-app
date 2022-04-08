@@ -14,18 +14,21 @@ An appointment application that allows you to retreive appointments based on fil
 
 I found the docs of the respective tools to be really useful. There was a fair bit of learning to do before I could get down to fleshing out the solution :)
 
+I also tried to show my thoughts through my commits
+
 ## Initial design
 To emulate real life I started off sketching up a plan for the project and gathering requirements. This resulted in a Miro board of ideas:
 
 <img src="img/ProjectPlan.png" alt="initial project plan">
 
-<img src="img/InitialDBschema.png" alt="initial DB schema">
+Initial database design:
+<img src="img/InitialDBschema.png" alt="initial DB schema" width=970>
 
 ### API
 From the above plan I created 2 endpoints:
 - `GET appointments/?startDate={}&endDate={}&appointmentType={}&specialisms={}`
 - `POST appointments` 
-- 
+
 Sample Body:
 ```
 {
