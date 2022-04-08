@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppointmentsService } from './appointments.service';
+import { CreateAppointmentDto } from './dto/create-appointment.dto';
 import { RequestAppointmentsDto } from './dto/request-appointments.dto';
 
 class ApiServiceMock {
@@ -33,6 +34,14 @@ describe.only('AppointmentsService', () => {
     service.findBy(dto);
     expect(findAppointmentSpy).toHaveBeenCalledWith(dto);
   });
+
+  it('should indicate conflict when createAppointment is called more than once for the same time with the same therapist', () => {
+    const dto = new CreateAppointmentDto();
+    service.create(dto)
+    service.create(dto)
+    expect(service.create).toThrowError()
+    
+  })
 });
 
 

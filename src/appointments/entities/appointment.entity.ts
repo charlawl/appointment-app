@@ -1,5 +1,5 @@
 import { Expose } from 'class-transformer';
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany, OneToOne, ManyToOne, GridFSBucketOpenUploadStreamOptions } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 import { Therapist } from './therapist.entity';
 
 export enum AppointmentType{
@@ -7,6 +7,9 @@ export enum AppointmentType{
     CONSULTATION = "consultation"
 }
 
+export function overlaps(s1,e1, s2,e2) {
+    return s1 <= e2 && s2 <= e1
+}
 @Entity()
 export class Appointment {
     @Expose()
@@ -26,6 +29,11 @@ export class Appointment {
         return millis/60000
     }
 
+    //TODO: Implement a function to check overlapping appointments
+    conflicts(appointments:Appointment[]) : boolean {
+        return appointments.some((a:Appointment) => overlaps(this.startTime, a.endTime, this.endTime, a.startTime))
+    }
+
     @Expose()
     @Column({
         type:"enum",
@@ -34,7 +42,7 @@ export class Appointment {
     appointmentType: AppointmentType
 
     @Expose()
-    @ManyToOne(type => Therapist, therapist => therapist.appointments, {eager: true})
+    @ManyToOne(type => Therapist, therapist => therapist.appointments, {cascade: true})
     therapist: Therapist 
 }
 

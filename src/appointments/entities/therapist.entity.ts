@@ -27,6 +27,6 @@ export class Therapist{
     })
     specialisms: Specialism[]
 
-    @OneToMany(type => Appointment, appointment => appointment.therapist, {cascade: true})
+    @OneToMany(type => Appointment, appointment => appointment.therapist,  {eager: true})
     appointments: Appointment[];
 }

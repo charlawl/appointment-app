@@ -1,5 +1,6 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UsePipes, ValidationPipe, UseInterceptors, ClassSerializerInterceptor, SerializeOptions, HttpCode, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UsePipes, ValidationPipe, UseInterceptors, ClassSerializerInterceptor, SerializeOptions, HttpCode, HttpStatus, NotFoundException, HttpException } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ArrayNotEmpty } from 'class-validator';
 import { AppointmentsService } from './appointments.service';
 import { CreateAppointmentDto } from './dto/create-appointment.dto';
 import { RequestAppointmentsDto } from './dto/request-appointments.dto';
@@ -17,13 +18,13 @@ export class AppointmentsController {
   @Get()
   @ApiResponse({
     status: 200,
-    description: 'The found record',
+    description: 'Record found',
     type: Appointment,
   })
   @HttpCode(HttpStatus.OK)
   @UsePipes(new ValidationPipe({transform:true}))
   @UseInterceptors(ClassSerializerInterceptor)
-  findAppointments(@Query() dto:RequestAppointmentsDto)  {
+  async findAppointments(@Query() dto:RequestAppointmentsDto)  {
     //NOTE: normally I would validate the input query string parameters here in .NET. Using the IActionResult class I could 
     //return OK, BadRequest etc. But I used the class-validator in NestJs in my DTO instead to validate the types of the inputs
     return this.appointmentsService.findBy(dto);
@@ -31,15 +32,11 @@ export class AppointmentsController {
 
   @Post()
   @UsePipes(new ValidationPipe({transform:true}))
-  create(@Body() createAppointmentDto: CreateAppointmentDto) {
+  createAppointment(@Body() createAppointmentDto: CreateAppointmentDto) {
+    //NOTE: there should be a 409 Conflict check here if an appointment with a therapist already exists at the requsted time
     return this.appointmentsService.create(createAppointmentDto);
   }
-
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.appointmentsService.findOne();
-  // }
-
+  
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateAppointmentDto: UpdateAppointmentDto) {
     return this.appointmentsService.update(+id, updateAppointmentDto);

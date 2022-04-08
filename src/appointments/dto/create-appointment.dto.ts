@@ -1,5 +1,5 @@
-import { IsDate, IsEnum, IsNumber, IsUUID } from "class-validator"
-import { Type, Transform } from 'class-transformer'
+import { IsDate, IsEnum, IsNumber } from "class-validator"
+import { Type } from 'class-transformer'
 import { AppointmentType } from "../entities/appointment.entity"
 
 export class CreateAppointmentDto {

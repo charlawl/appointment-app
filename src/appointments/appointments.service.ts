@@ -1,7 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOneOptions, Repository, SelectQueryBuilder } from 'typeorm';
-import { domainToASCII } from 'url';
 import { CreateAppointmentDto } from './dto/create-appointment.dto';
 import { RequestAppointmentsDto } from './dto/request-appointments.dto';
 import { UpdateAppointmentDto } from './dto/update-appointment.dto';
@@ -22,7 +21,7 @@ export class AppointmentsService {
     return this.appointmentRepository.find();
   }
 
-  //Composing conditions to filter
+  //NOTE: Composing conditions to filter appointments by optional parameters; date, type and specialism
   findBy(dto: RequestAppointmentsDto){
     var qb = this.appointmentRepository.createQueryBuilder("appointment").leftJoinAndSelect("appointment.therapist", "therapist")
     this.filterByDateRange(qb, dto)
@@ -36,9 +35,8 @@ export class AppointmentsService {
     if(!startDate || !endDate){
       return builder;
     }
-
-    return builder.where("appointment.startTime > :startDate", {startDate: startDate})
-                  .andWhere("appointment.endTime < :endDate", {endDate: endDate});
+    return builder.where("appointment.startTime >= :startDate", {startDate: startDate})
+                  .andWhere("appointment.endTime <= :endDate", {endDate: endDate});
   }
 
   filterByAppointmentType(builder: SelectQueryBuilder<Appointment>, {appointmentType}: RequestAppointmentsDto) : any { 
@@ -58,14 +56,17 @@ export class AppointmentsService {
   }
 
   async create(createAppointmentDto: CreateAppointmentDto){
-    //lots of awaiting - this could be more efficient
+    //NOTE:lots of awaiting - this could be more efficient
     //should be using query builder here to send one single query to the DB to minimize reads
-
-    // var qb = builder.where("therapist.id = :createAppointmentDto.therapistId",{relations: ['appointments']})
-    // var x = qb.insert().into(Therapist).values(appointment)
 
     const appointment = this.appointmentRepository.create(createAppointmentDto);
     const therapist = await this.therapistRepository.findOne({where: {id: createAppointmentDto.therapistId}, relations: ['appointments']});
+    
+    //NOTE: Don't think I should be raising a HTTP exception at the service level
+    if(appointment.conflicts(therapist.appointments)){
+      throw new HttpException("This appointment conflicts with another", HttpStatus.CONFLICT)
+    }
+
     therapist.appointments.push(appointment);
     await this.therapistRepository.save(therapist);
     return appointment;

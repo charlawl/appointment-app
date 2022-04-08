@@ -1,6 +1,8 @@
+import { HttpCode, HttpStatus } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppointmentsController } from './appointments.controller';
 import { AppointmentsService } from './appointments.service';
+import { CreateAppointmentDto } from './dto/create-appointment.dto';
 import { RequestAppointmentsDto } from './dto/request-appointments.dto';
 
 describe('AppointmentsController', () => {
@@ -11,7 +13,8 @@ describe('AppointmentsController', () => {
     const ApiServiceProvider = {
       provide: AppointmentsService,
       useFactory: () => ({
-        findBy: jest.fn(() => [])
+        findBy: jest.fn(() => []),
+        create: jest.fn(() => [])
       })
     }
     const module: TestingModule = await Test.createTestingModule({
