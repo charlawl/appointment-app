@@ -14,12 +14,18 @@ An appointment application that allows you to retreive appointments based on fil
 
 I found the docs of the respective tools to be really useful. There was a fair bit of learning to do before I could get down to fleshing out the solution :)
 
-I also tried to show my thoughts through my commits
+I also tried to show my thoughts through my commits and in comments throughout the code. I have a detailed list of observations and findings below my design also.
 
 ## Running the App
+1. Spin up Postgres and NestJS app
+```docker-compose up --build```
+
+2. Run database seed migration
+```docker-compose exec nestjs npx typeorm migration:run```
+
+3. App will be running at `localhost:3000`
 
 Postman collection for test requests: https://www.getpostman.com/collections/76a80b70bc3addbccb10
-
 
 
 ## Initial design
@@ -46,52 +52,23 @@ Sample Body:
 ```
 
 ## Learnings/Observations
-- **ORM choice:** TypeORM seemed very widely used and had good docs
-- **Modules:** Used built in NestJS modules as they provide all the boiler plate needed for setting up a serivce and allow for quick and easy extension of the project
-- **DB Migrations:** Would have prefered to bootstrap the DB on startup as migrations are stateful but couldn't figure out how
-- **Intercaptors:** Really enjoyed using these. I didn't create a custom transformation and instead used the built in `ClassSerializerInterceptor` to expose the data I needed in the response from the DB. I would have done this very differently in .NET, by creating a mapper and models classes and parsing the JSON on response.
-- **Error Handling:** I used the `class-validator` library to decorate the DTO fields which returnd a `400` status code if the parameters were the wrong type or value in the case of the Enums. This was also pretty different to .NET where I would usually handle `BadRequest` at the controller level. 
+- **Modules:** Used built-in NestJS modules as they provide all of the boiler plate code needed to bootstrap a serivce and allow for quick and easy extension of the project
 
-### Montioring & Logging
+- **DB Migrations:** Would have prefered to bootstrap the DB on startup as migrations are stateful but couldn't figure out how
+
+- **Interceptors:** Really enjoyed using these. I didn't create a custom transformation and instead used the built in `ClassSerializerInterceptor` to expose the data I needed in the response from the DB. I would have done this very differently in .NET, by creating a mapper and models classes and parsing the JSON on response.
+
+- **Error Handling:** I used the `class-validator` library for DTO validation. This was also pretty different to .NET where I would usually handle `BadRequest` at the controller level.
+
+- **Dockerising:** I followed [this tutorial](https://blog.logrocket.com/containerized-development-nestjs-docker/). I unfortunately didn't pay much attention to my dev dependencies up until this point which means my distribution is probably larger than it should be. Given the trouble I had with Docker at a late stage in development, I would start with that in the future!
+
+- **TypeORM Migrations:** I went with TypeORM Migrations to seed the DB with dummy data for development. It took a while for me to realise that I needed to pull the entities out of the compiled Javascript not the typescript - I'm still not sure why it works now, or why [a framework with "type" in the name needs to deal with the js in the first place](https://stackoverflow.com/questions/59435293/typeorm-entity-in-nestjs-cannot-use-import-statement-outside-a-module#comment106171937_59607836)
 
 ### Authorisation & Authentication
+Due to the sensitive nature of medical appointments it is very important to have proper role based access. At the moment there is no sensitive client information in the response as we are returning just appointment slots, but if extended to include endpoints about being able to retrieve client or appointment information then distinct roles would need to be implemented. 
 
-## Installation
+### Monitoring & Logging
 
-```bash
-$ npm install
-```
 
-## Running the app
 
-```bash
-# development
-$ npm run start
 
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
-```
-
-## Test
-
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
-```
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
