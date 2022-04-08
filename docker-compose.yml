@@ -1,0 +1,35 @@
+version: '3'
+services: 
+  db:
+    image: postgres
+    restart: always
+    environment: 
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASS} #pull this into env vars
+      - POSTGRES_DB=${POSTGRES_DB}
+    container_name: postgres-db
+  nestjs:
+    build: 
+      context: .
+      target: development
+      dockerfile: ./Dockerfile
+    command: npm run start:dev
+    environment: 
+      - DB_TYPE=${DB_TYPE}
+      - POSTGRES_HOST=${POSTGRES_HOST}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASS=${POSTGRES_PASS}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_SYNC=false
+      - JWT_SECRET=${JWT_SECRET}
+      - POSTGRES_PORT=${POSTGRES_PORT}
+      - APP_EXPIRES=${APP_EXPIRES}
+      - APP_PORT=${APP_PORT}
+    ports: 
+      - "3000:3000" # expose-to-the-world : only-in-the-docker
+    container_name: nest-appointment-app
+    depends_on: 
+      - db
+    volumes: 
+      - .:/app
+      - /app/node_modules
