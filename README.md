@@ -16,6 +16,12 @@ I found the docs of the respective tools to be really useful. There was a fair b
 
 I also tried to show my thoughts through my commits
 
+## Running the App
+
+Postman collection for test requests: https://www.getpostman.com/collections/76a80b70bc3addbccb10
+
+
+
 ## Initial design
 To emulate real life I started off sketching up a plan for the project and gathering requirements. This resulted in a Miro board of ideas:
 
@@ -45,6 +51,10 @@ Sample Body:
 - **DB Migrations:** Would have prefered to bootstrap the DB on startup as migrations are stateful but couldn't figure out how
 - **Intercaptors:** Really enjoyed using these. I didn't create a custom transformation and instead used the built in `ClassSerializerInterceptor` to expose the data I needed in the response from the DB. I would have done this very differently in .NET, by creating a mapper and models classes and parsing the JSON on response.
 - **Error Handling:** I used the `class-validator` library to decorate the DTO fields which returnd a `400` status code if the parameters were the wrong type or value in the case of the Enums. This was also pretty different to .NET where I would usually handle `BadRequest` at the controller level. 
+
+### Montioring & Logging
+
+### Authorisation & Authentication
 
 ## Installation
 
