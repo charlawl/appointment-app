@@ -9,11 +9,9 @@ export enum AppointmentType{
 
 @Entity()
 export class Appointment {
+    @Expose()
     @PrimaryGeneratedColumn()
     id: number;
-
-    @Column({default:null})
-    clientId: string;
 
     @Expose()
     @Column()

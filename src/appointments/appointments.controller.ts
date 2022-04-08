@@ -30,14 +30,15 @@ export class AppointmentsController {
   }
 
   @Post()
+  @UsePipes(new ValidationPipe({transform:true}))
   create(@Body() createAppointmentDto: CreateAppointmentDto) {
     return this.appointmentsService.create(createAppointmentDto);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.appointmentsService.findOne(+id);
-  }
+  // @Get(':id')
+  // findOne(@Param('id') id: string) {
+  //   return this.appointmentsService.findOne();
+  // }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateAppointmentDto: UpdateAppointmentDto) {
