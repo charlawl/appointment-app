@@ -5,10 +5,12 @@
     "username": "postgres",
     "password": "password",
     "database": "appointment_app",
-    "entities": ["dist/**/*.entity{.ts,.js}"],
     "synchronize": true,
-    "migrations": ["dist/**/migrations/*.js"],
-    "cli": {
-      "migrationsDir": "src/migrations"
-    }
+    "entities": [
+      "dist/**/*.entity.js", //NOTE: Type ORM requires the complied JS to run the migrations
+      "src/**/*.entity.ts" //NOTE: this is for the e2e tests to run. Without this entities are unfindable by supertest...
+    ],
+    "migrations": [
+      "dist/migrations/**/*.{ts,js}"
+    ]
   }
