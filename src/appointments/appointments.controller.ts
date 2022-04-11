@@ -31,12 +31,19 @@ export class AppointmentsController {
   }
 
   @Post()
+  @ApiResponse({
+    status: 204,
+    description: 'Appointment Created',
+    type: Appointment,
+  })
+  @HttpCode(HttpStatus.CREATED)
   @UsePipes(new ValidationPipe({transform:true}))
   createAppointment(@Body() createAppointmentDto: CreateAppointmentDto) {
     //NOTE: there should be a 409 Conflict check here if an appointment with a therapist already exists at the requsted time
     return this.appointmentsService.create(createAppointmentDto);
   }
-  
+
+  //NOTE: left the boiler plate code from the module creation in case we needed to add more methods
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateAppointmentDto: UpdateAppointmentDto) {
     return this.appointmentsService.update(+id, updateAppointmentDto);

@@ -27,6 +27,7 @@ export class AppointmentsService {
     this.filterByDateRange(qb, dto)
     this.filterByAppointmentType(qb, dto)
     this.filterBySpecialism(qb, dto)
+    //LOG: appointment found for the following criteria {dto}
     return qb.getMany()
   }
 
@@ -64,14 +65,17 @@ export class AppointmentsService {
     
     //NOTE: Don't think I should be raising a HTTP exception at the service level
     if(appointment.conflicts(therapist.appointments)){
+      //LOG: appointment conflicts for this slot
       throw new HttpException("This appointment conflicts with another", HttpStatus.CONFLICT)
     }
 
     therapist.appointments.push(appointment);
     await this.therapistRepository.save(therapist);
+    //LOG: appointment created for {therapist}
     return appointment;
   }
 
+  //NOTE: left in the other service methods for extensibility in the future
   findOne(findOne: FindOneOptions<Appointment>) {
     return this.appointmentRepository.find(findOne);
   }
