@@ -17,13 +17,16 @@ I found the docs of the respective tools to be really useful. There was a fair b
 I also tried to show my thoughts through my commits and in comments throughout the code. I have a detailed list of observations and findings below my design also.
 
 ## Running the App
-1. Spin up Postgres and NestJS app
+1. Build the project 
+```docker build```
+
+2. Spin up Postgres and NestJS app
 ```docker-compose up --build```
 
-2. Run database seed migration
+3. Run database seed migration
 ```docker-compose exec nestjs npx typeorm migration:run```
 
-3. App will be running at `localhost:3000`
+4. App will be running at `localhost:3000`
 
 Postman collection for test requests: https://www.getpostman.com/collections/76a80b70bc3addbccb10
 
