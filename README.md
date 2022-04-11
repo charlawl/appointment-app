@@ -69,7 +69,9 @@ Sample Body:
 
 - **TypeORM Migrations:** I went with TypeORM Migrations to seed the DB with dummy data for development. It took a while for me to realise that I needed to pull the entities out of the compiled Javascript not the typescript - I'm still not sure why it works now, or why [a framework with "type" in the name needs to deal with the js in the first place](https://stackoverflow.com/questions/59435293/typeorm-entity-in-nestjs-cannot-use-import-statement-outside-a-module#comment106171937_59607836)
 
-- **Testing:** I wrote some basic unit tests and e2e tests for the service. Unfortunately because TypeORM needs the compiled JS to run, and `supertest` which came with NestJs needs the TS to run the tests. I know that the `ormconfig.json` needs to look at both the JS and TS for both to work, but after dockerizing the app the below config no longer works :(
+- **Testing:** I wrote some basic unit tests and e2e tests for the service. Unfortunately because TypeORM needs the compiled JS to run, and `supertest` which came with NestJs needs the TS to run the tests. I know that the `ormconfig.json` needs to look at both the JS and TS for both to work, but after dockerizing the app the below config no longer works :( 
+
+I also ran into an issue mocking the repositories I had created (along with a few other people who had a similar (issue)[https://github.com/nestjs/nest/issues/991]). Would love to discuss how to do this properly!
 
 - **Documentation:** I added swagger to the API so it could be easily reviewed by other devs as to what the endpoints expect and return. I have also added in comments to make it (hopefully) a bit easier to understand my process.
 
