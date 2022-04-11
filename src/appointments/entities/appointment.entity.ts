@@ -31,7 +31,7 @@ export class Appointment {
 
     //TODO: Implement a function to check overlapping appointments
     conflicts(appointments:Appointment[]) : boolean {
-        return appointments.some((a:Appointment) => overlaps(this.startTime, a.endTime, this.endTime, a.startTime))
+        return appointments.some((a:Appointment) => overlaps(this.startTime, this.endTime, a.startTime, a.endTime))
     }
 
     @Expose()
@@ -42,7 +42,7 @@ export class Appointment {
     appointmentType: AppointmentType
 
     @Expose()
-    @ManyToOne(type => Therapist, therapist => therapist.appointments, {cascade: true})
+    @ManyToOne(type => Therapist, therapist => therapist.appointments, {eager: true})
     therapist: Therapist 
 }
 

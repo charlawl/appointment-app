@@ -15,7 +15,11 @@ export class AppointmentsService {
 
     @InjectRepository(Therapist)
     private therapistRepository: Repository<Therapist>
-  ) {}
+  ) {
+
+    this.appointmentRepository = appointmentRepository
+    this.therapistRepository = therapistRepository
+  }
 
   findAll(): Promise<Appointment[]>{
     return this.appointmentRepository.find();
@@ -60,8 +64,9 @@ export class AppointmentsService {
     //NOTE:lots of awaiting - this could be more efficient
     //should be using query builder here to send one single query to the DB to minimize reads
 
-    const appointment = this.appointmentRepository.create(createAppointmentDto);
     const therapist = await this.therapistRepository.findOne({where: {id: createAppointmentDto.therapistId}, relations: ['appointments']});
+    const appointment = this.appointmentRepository.create(createAppointmentDto);
+
     
     //NOTE: Don't think I should be raising a HTTP exception at the service level
     if(appointment.conflicts(therapist.appointments)){
@@ -75,11 +80,11 @@ export class AppointmentsService {
     return appointment;
   }
 
-  //NOTE: left in the other service methods for extensibility in the future
-  findOne(findOne: FindOneOptions<Appointment>) {
-    return this.appointmentRepository.find(findOne);
+  async findOne(findOne: FindOneOptions<Appointment>) {
+    return await this.appointmentRepository.find(findOne);
   }
 
+  //NOTE: left in the other service methods for extensibility in the future
   update(id: number, updateAppointmentDto: UpdateAppointmentDto) {
     return `This action updates a #${id} appointment`;
   }
