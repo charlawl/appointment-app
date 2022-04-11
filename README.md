@@ -29,7 +29,7 @@ Postman collection for test requests: https://www.getpostman.com/collections/76a
 
 
 ## Initial design
-To emulate real life I started off sketching up a plan for the project and gathering requirements. This resulted in a Miro board of ideas:
+I started off sketching up a plan for the project and gathering requirements. This resulted in a Miro board of ideas:
 
 <img src="img/ProjectPlan.png" alt="initial project plan" width=670>
 
