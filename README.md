@@ -31,10 +31,12 @@ Postman collection for test requests: https://www.getpostman.com/collections/76a
 ## Initial design
 To emulate real life I started off sketching up a plan for the project and gathering requirements. This resulted in a Miro board of ideas:
 
-<img src="img/ProjectPlan.png" alt="initial project plan">
+<img src="img/ProjectPlan.png" alt="initial project plan" width=670>
 
-Initial database design:
-<img src="img/InitialDBschema.png" alt="initial DB schema" width=970>
+## Initial database design:
+These schemas were for a system with more functionality to add clients etc. but for the purposes of the challenge I didn't add in a table for them in the end. 
+
+<img src="img/InitialDBschema.png" alt="initial DB schema" width=670>
 
 ### API
 From the above plan I created 2 endpoints:
@@ -64,11 +66,33 @@ Sample Body:
 
 - **TypeORM Migrations:** I went with TypeORM Migrations to seed the DB with dummy data for development. It took a while for me to realise that I needed to pull the entities out of the compiled Javascript not the typescript - I'm still not sure why it works now, or why [a framework with "type" in the name needs to deal with the js in the first place](https://stackoverflow.com/questions/59435293/typeorm-entity-in-nestjs-cannot-use-import-statement-outside-a-module#comment106171937_59607836)
 
+- **Testing:** I wrote some basic unit tests and e2e tests for the service. Unfortunately because TypeORM needs the compiled JS to run, and `supertest` which came with NestJs needs the TS to run the tests. I know that the `ormconfig.json` needs to look at both the JS and TS for both to work, but after dockerizing the app the below config no longer works :(
+
+- **Documentation:** I added swagger to the API so it could be easily reviewed by other devs as to what the endpoints expect and return. I have also added in comments to make it (hopefully) a bit easier to understand my process.
+
+```
+"entities": [
+      'dist/**/*.entity.js',
+      "src/**/*.entity.ts"
+    ]
+ ```
+
 ### Authorisation & Authentication
 Due to the sensitive nature of medical appointments it is very important to have proper role based access. At the moment there is no sensitive client information in the response as we are returning just appointment slots, but if extended to include endpoints about being able to retrieve client or appointment information then distinct roles would need to be implemented. 
 
+I would verify a users credientials before sending a JWT as a bearer token. This would ensure that clients could only access their only appointments and therapists could see their own appointment slots.
+
 ### Monitoring & Logging
+#### Logging
+I put in a few comments in the code where I would log out certain pieces of information. I don't like overly verbose logging as I think it can become noise when trying to debug.
 
+#### Healthchecks
+I would set up 2; one to check the API was still available and healthy, and another to ensure that the API still had a connection to the DB. These metrics could be displayed in Datadog/Grafana etc. with an alert to monitor if the status of either changes
 
+#### Alerting
+ - API health
+ - DB health
+ - monitoring around error rates (`400`, `404` response codes)
 
-
+#### Dashboards
+I think a simple dashboard would be a great way of monitoring this service. Given more time I would have liked to add Grafana and create a few simple metrics and alerts
