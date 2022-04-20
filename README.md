@@ -71,16 +71,16 @@ Sample Body:
 
 - **Testing:** I wrote some basic unit tests and e2e tests for the service. Unfortunately because TypeORM needs the compiled JS to run, and `supertest` which came with NestJs needs the TS to run the tests. I know that the `ormconfig.json` needs to look at both the JS and TS for both to work, but after dockerizing the app the below config no longer works :( 
 
-I also ran into an issue mocking the repositories I had created (along with a few other people who had a similar (issue)[https://github.com/nestjs/nest/issues/991]). Would love to discuss how to do this properly!
-
-- **Documentation:** I added swagger to the API so it could be easily reviewed by other devs as to what the endpoints expect and return. I have also added in comments to make it (hopefully) a bit easier to understand my process.
-
 ```
 "entities": [
       'dist/**/*.entity.js',
       "src/**/*.entity.ts"
     ]
  ```
+
+I also ran into an issue mocking the repositories I had created (along with a few other people who had a similar (issue)[https://github.com/nestjs/nest/issues/991]). Would love to discuss how to do this properly!
+
+- **Documentation:** I added swagger to the API so it could be easily reviewed by other devs as to what the endpoints expect and return. I have also added in comments to make it (hopefully) a bit easier to understand my process.
 
 ### Authorisation & Authentication
 Due to the sensitive nature of medical appointments it is very important to have proper role based access. At the moment there is no sensitive client information in the response as we are returning just appointment slots, but if extended to include endpoints about being able to retrieve client or appointment information then distinct roles would need to be implemented. 
