@@ -18,7 +18,7 @@ I also tried to show my thoughts through my commits and in comments throughout t
 
 ## Running the App
 1. Build the project 
-```docker build```
+```docker build .```
 
 2. Spin up Postgres and NestJS app
 ```docker-compose up --build```
